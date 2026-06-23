@@ -1,6 +1,4 @@
-# Sudoku-solver
-
-Now just can solve next step(sometimes can't)
+Sudoku-solver
 
 just `gcc SudokuSolver.c` and `./a.out` is ok.
 
