@@ -2,6 +2,6 @@
 
 Now just can solve next step(sometimes can't)
 
-just `gcc 1.c` is ok.
+just `gcc SudokuSolver.c` and `./a.out` is ok.
 
 you need to change the sudoku in the source code.
