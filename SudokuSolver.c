@@ -309,7 +309,7 @@ int IsSolved(int* pointer){
 	return 1;
 }
 int main(){
-	int flag=1,stepcnt=0,i,j,k;
+	int flag=1,stepcnt=0,i,j,k,GuessFlag,GuessCnt;
 	memcpy(b,a,sizeof(int)*81);
 	while(flag){
 		flag=main1();
@@ -317,7 +317,8 @@ int main(){
 		printf("Step%dEnd\n",stepcnt++);
 		if(!flag&&!IsSolved(a[0])){
 			printf("---GuessPart:---\n");
-			int GuessFlag=0,GuessCnt=0;
+			GuessFlag=0;
+			GuessCnt=0;
 			memcpy(aBk,a,sizeof(int)*81);
 			memcpy(StackBk,Stack,sizeof(int)*9*9*9);
 			memset(Stack,0,sizeof(int)*9*9*9);
