@@ -14,23 +14,23 @@ int a[9][9]={
 int Stack[9][9][9]={},StackBk[9][9][9]={};
 
 int Check(int* SubStack,int* rpt,int r){
-	int cnt=0;
-	for(int i=0;i<r;i++){
+	int cnt=0,i;
+	for(i=0;i<r;i++){
 		if(SubStack[rpt[i]])
 			cnt++;
 	}
 	return (cnt==r||!cnt)?1:0;
 }
 void Keep(int* SubStack,int* rpt,int r){
-	int cnt=0;
-	for(int i=0;i<r;i++){
+	int cnt=0,i,j;
+	for(i=0;i<r;i++){
 		if(SubStack[rpt[i]])
 			cnt++;
 	}
 	if(cnt==r){
-		for(int i=0;i<9;i++){
+		for(i=0;i<9;i++){
 			int flag=1;
-			for(int j=0;j<r;j++){
+			for(j=0;j<r;j++){
 				if(i==rpt[j])
 					flag=0;
 			}
@@ -41,20 +41,20 @@ void Keep(int* SubStack,int* rpt,int r){
 	return;
 }
 int exists(int Ii,int Ij,int Ik){
-	int flag=0;
+	int flag=0,i,j;
 	//R
-	for(int i=0;i<9;i++){
+	for(i=0;i<9;i++){
 		if(a[i][Ij]==Ik)
 			flag=1;
 	}
 	//C
-	for(int j=0;j<9;j++){
+	for(j=0;j<9;j++){
 		if(a[Ii][j]==Ik)
 			flag=1;
 	}
 	//S
-	for(int i=Ii/3*3;i<(Ii/3+1)*3;i++){
-		for(int j=Ij/3*3;j<(Ij/3+1)*3;j++){
+	for(i=Ii/3*3;i<(Ii/3+1)*3;i++){
+		for(j=Ij/3*3;j<(Ij/3+1)*3;j++){
 			if(a[i][j]==Ik)
 				flag=1;
 		}
@@ -69,15 +69,15 @@ int fill(int input1,int input2,int input3){
 }
 
 int main1(){
-	int Changed=0;
-	for(int i=0;i<9;i++){
-		for(int j=0;j<9;j++){
+	int Changed=0,i,j,k,r,I,J;
+	for(i=0;i<9;i++){
+		for(j=0;j<9;j++){
 			if(a[i][j])
 				printf("%11d",a[i][j]);
 			else{
 				char cb[10]={};
 				cb[9]='\0';
-				for(int k=1;k<10;k++){
+				for(k=1;k<10;k++){
 					if(!exists(i,j,k)){
 						cb[k-1]=k+'0';
 						Stack[i][j][k-1]=k;
@@ -112,93 +112,93 @@ int main1(){
 	*/
 
 	//printf("1:\n");
-	for(int i=0;i<9;i++){
+	for(i=0;i<9;i++){
 		int ar[9]={};
-		for(int j=0;j<9;j++){
-			for(int k=0;k<9;k++){
+		for(j=0;j<9;j++){
+			for(k=0;k<9;k++){
 				if(Stack[i][j][k])
 					ar[k]++;
 			}
 		}
-		for(int r=2;r<10;r++){
+		for(r=2;r<10;r++){
 			int cnt=0,rpt[10]={};
-			for(int k=0;k<9;k++){
+			for(k=0;k<9;k++){
 				if(ar[k]==r)
 					rpt[cnt++]=k;
 			}
 			if(cnt==r){
 				//printf("CheckpointR:%d\n",i);
 				int flag=0;
-				for(int j=0;j<9;j++){
+				for(j=0;j<9;j++){
 					flag=flag||(!(Check(Stack[i][j],rpt,r)));
 				}
 				if(flag)
 					continue;
-				for(int j=0;j<9;j++){
+				for(j=0;j<9;j++){
 					Keep(Stack[i][j],rpt,r);
 				}
 			}
 		}
 	}
 	//printf("2:\n");
-	for(int j=0;j<9;j++){
+	for(j=0;j<9;j++){
 		int ac[9]={};
-		for(int i=0;i<9;i++){
-			for(int k=0;k<9;k++){
+		for(i=0;i<9;i++){
+			for(k=0;k<9;k++){
 				if(Stack[i][j][k])
 					ac[k]++;
 			}
 		}
-		for(int r=2;r<10;r++){
+		for(r=2;r<10;r++){
 			int cnt=0,rpt[10]={};
-			for(int k=0;k<9;k++){
+			for(k=0;k<9;k++){
 				if(ac[k]==r)
 					rpt[cnt++]=k;
 			}
 			if(cnt==r){
 				//printf("CheckpointC:%d\n",j);
 				int flag=0;
-				for(int i=0;i<9;i++){
+				for(i=0;i<9;i++){
 					flag=flag||(!(Check(Stack[i][j],rpt,r)));
 				}
 				if(flag)
 					continue;
-				for(int i=0;i<9;i++){
+				for(i=0;i<9;i++){
 					Keep(Stack[i][j],rpt,r);
 				}
 			}
 		}
 	}
 	//printf("3:\n");
-	for(int I=0;I<3;I++){
-		for(int J=0;J<3;J++){
+	for(I=0;I<3;I++){
+		for(J=0;J<3;J++){
 			int ap[9]={};
-			for(int i=I*3;i<(I+1)*3;i++){
-				for(int j=J*3;j<(J+1)*3;j++){
-					for(int k=0;k<9;k++){
+			for(i=I*3;i<(I+1)*3;i++){
+				for(j=J*3;j<(J+1)*3;j++){
+					for(k=0;k<9;k++){
 						if(Stack[i][j][k])
 							ap[k]++;
 					}
 				}
 			}
-			for(int r=2;r<10;r++){
+			for(r=2;r<10;r++){
 				int cnt=0,rpt[10]={};
-				for(int k=0;k<9;k++){
+				for(k=0;k<9;k++){
 					if(ap[k]==r)
 						rpt[cnt++]=k;
 				}
 				if(cnt==r){
 					//printf("CheckpointA:%d,%d\n",I,J);
 					int flag=0;
-					for(int i=I*3;i<(I+1)*3;i++){
-						for(int j=J*3;j<(J+1)*3;j++){
+					for(i=I*3;i<(I+1)*3;i++){
+						for(j=J*3;j<(J+1)*3;j++){
 							flag=flag||(!(Check(Stack[i][j],rpt,r)));
 						}
 					}
 					if(flag)
 						continue;
-					for(int i=I*3;i<(I+1)*3;i++){
-						for(int j=J*3;j<(J+1)*3;j++){
+					for(i=I*3;i<(I+1)*3;i++){
+						for(j=J*3;j<(J+1)*3;j++){
 							Keep(Stack[i][j],rpt,r);
 						}
 					}
@@ -211,14 +211,14 @@ int main1(){
 		return Changed;
 
 	printf("AfterChange:\n");
-	for(int i=0;i<9;i++){
-		for(int j=0;j<9;j++){
+	for(i=0;i<9;i++){
+		for(j=0;j<9;j++){
 			if(a[i][j])
 				printf("%11d",a[i][j]);
 			else{
 				char cb[10]={};
 				cb[9]='\0';
-				for(int k=0;k<9;k++){
+				for(k=0;k<9;k++){
 					if(Stack[i][j][k])
 						cb[k]=k+'1';
 					else
@@ -230,18 +230,18 @@ int main1(){
 		printf("\n");
 	}
 
-	for(int i=0;i<9;i++){
+	for(i=0;i<9;i++){
 		int ar[9]={};
-		for(int j=0;j<9;j++){
-			for(int k=0;k<9;k++){
+		for(j=0;j<9;j++){
+			for(k=0;k<9;k++){
 				if(Stack[i][j][k])
 					ar[k]++;
 			}
 		}
-		for(int k=0;k<9;k++){
+		for(k=0;k<9;k++){
 			if(ar[k]==1){
 				//printf("R%d:%d\n",i,k+1);
-				for(int j=0;j<9;j++){
+				for(j=0;j<9;j++){
 					if(Stack[i][j][k])
 						Changed+=fill(i,j,Stack[i][j][k]);
 				}
@@ -250,18 +250,18 @@ int main1(){
 	}
 	if(Changed)
 		return Changed;
-	for(int j=0;j<9;j++){
+	for(j=0;j<9;j++){
 		int ac[9]={};
-		for(int i=0;i<9;i++){
-			for(int k=0;k<9;k++){
+		for(i=0;i<9;i++){
+			for(k=0;k<9;k++){
 				if(Stack[i][j][k])
 					ac[k]++;
 			}
 		}
-		for(int k=0;k<9;k++){
+		for(k=0;k<9;k++){
 			if(ac[k]==1){
 				//printf("C%d:%d\n",j,k+1);
-				for(int i=0;i<9;i++){
+				for(i=0;i<9;i++){
 					if(Stack[i][j][k])
 						Changed+=fill(i,j,Stack[i][j][k]);
 				}
@@ -270,22 +270,22 @@ int main1(){
 	}
 	if(Changed)
 		return Changed;
-	for(int I=0;I<3;I++){
-		for(int J=0;J<3;J++){
+	for(I=0;I<3;I++){
+		for(J=0;J<3;J++){
 			int ap[9]={};
-			for(int i=I*3;i<(I+1)*3;i++){
-				for(int j=J*3;j<(J+1)*3;j++){
-					for(int k=0;k<9;k++){
+			for(i=I*3;i<(I+1)*3;i++){
+				for(j=J*3;j<(J+1)*3;j++){
+					for(k=0;k<9;k++){
 						if(Stack[i][j][k])
 							ap[k]++;
 					}
 				}
 			}
-			for(int k=0;k<9;k++){
+			for(k=0;k<9;k++){
 				if(ap[k]==1){
 					//printf("%d,%d:%d\n",I,J,k+1);
-					for(int i=I*3;i<(I+1)*3;i++){
-						for(int j=J*3;j<(J+1)*3;j++){
+					for(i=I*3;i<(I+1)*3;i++){
+						for(j=J*3;j<(J+1)*3;j++){
 							if(Stack[i][j][k])
 								Changed+=fill(i,j,Stack[i][j][k]);
 						}
@@ -298,8 +298,9 @@ int main1(){
 }
 
 int IsSolved(int* pointer){
-	for(int i=0;i<9;i++){
-		for(int j=0;j<9;j++){
+	int i,j;
+	for(i=0;i<9;i++){
+		for(j=0;j<9;j++){
 			if(!pointer[i*9+j]){ //a[i][j]
 				return 0;
 			}
@@ -308,7 +309,7 @@ int IsSolved(int* pointer){
 	return 1;
 }
 int main(){
-	int flag=1,stepcnt=0;
+	int flag=1,stepcnt=0,i,j,k;
 	memcpy(b,a,sizeof(int)*81);
 	while(flag){
 		flag=main1();
@@ -320,9 +321,9 @@ int main(){
 			memcpy(aBk,a,sizeof(int)*81);
 			memcpy(StackBk,Stack,sizeof(int)*9*9*9);
 			memset(Stack,0,sizeof(int)*9*9*9);
-			for(int i=0;i<9;i++){
-				for(int j=0;j<9;j++){
-					for(int k=0;k<9;k++){
+			for(i=0;i<9;i++){
+				for(j=0;j<9;j++){
+					for(k=0;k<9;k++){
 						if(StackBk[i][j][k]){
 							int SubFlag=1;
 							GuessFlag=0;
