@@ -1,17 +1,17 @@
 #include <stdio.h>
 #include <string.h>
 int a[9][9]={
-{5,4,0,8,0,1,9,0,6},
-{0,2,3,0,0,0,0,7,8},
-{8,0,0,0,0,0,0,3,0},
-{2,0,0,0,4,0,0,0,1},
-{0,0,0,7,5,9,0,0,0},
-{9,0,0,0,2,0,0,0,3},
-{0,6,0,0,0,0,0,0,2},
-{4,9,0,0,0,0,8,6,0},
-{3,0,1,2,0,7,0,4,9}
-},b[9][9];
-int Stack[9][9][9]={};
+{0,0,9,0,0,3,1,5,0},
+{0,5,0,0,0,0,0,3,4},
+{0,1,0,4,0,2,0,0,0},
+{0,0,1,2,0,0,0,0,7},
+{0,0,4,0,1,0,5,0,0},
+{9,0,0,0,0,7,6,0,0},
+{0,0,0,1,0,4,0,8,0},
+{1,8,0,0,0,0,0,6,0},
+{0,4,3,6,0,0,7,0,0}
+},b[9][9],aBk[9][9];
+int Stack[9][9][9]={},StackBk[9][9][9]={};
 
 int Check(int* SubStack,int* rpt,int r){
 	int cnt=0;
@@ -73,25 +73,24 @@ int main1(){
 	for(int i=0;i<9;i++){
 		for(int j=0;j<9;j++){
 			if(a[i][j])
-				//printf("%11d",a[i][j]);
-				continue;
+				printf("%11d",a[i][j]);
 			else{
-				char b[10]={};
-				b[9]='\0';
+				char cb[10]={};
+				cb[9]='\0';
 				for(int k=1;k<10;k++){
 					if(!exists(i,j,k)){
-						b[k-1]=k+'0';
+						cb[k-1]=k+'0';
 						Stack[i][j][k-1]=k;
 					}
 					else
-						b[k-1]=' ';
+						cb[k-1]=' ';
 				}
-				//printf("[%s]",b);
+				printf("[%s]",cb);
 			}
 		}
-		//printf("\n");
+		printf("\n");
 	}
-
+	/*
 	for(int i=0;i<9;i++){
 		for(int j=0;j<9;j++){
 			int cnt=0;
@@ -110,6 +109,7 @@ int main1(){
 			}
 		}
 	}
+	*/
 
 	//printf("1:\n");
 	for(int i=0;i<9;i++){
@@ -207,21 +207,24 @@ int main1(){
 		}
 	}
 
-	//printf("AfterChange:\n");
+	if(Changed)
+		return Changed;
+
+	printf("AfterChange:\n");
 	for(int i=0;i<9;i++){
 		for(int j=0;j<9;j++){
 			if(a[i][j])
 				printf("%11d",a[i][j]);
 			else{
-				char b[10]={};
-				b[9]='\0';
+				char cb[10]={};
+				cb[9]='\0';
 				for(int k=0;k<9;k++){
 					if(Stack[i][j][k])
-						b[k]=k+'1';
+						cb[k]=k+'1';
 					else
-						b[k]=' ';
+						cb[k]=' ';
 				}
-				printf("[%s]",b);
+				printf("[%s]",cb);
 			}
 		}
 		printf("\n");
@@ -245,6 +248,8 @@ int main1(){
 			}
 		}
 	}
+	if(Changed)
+		return Changed;
 	for(int j=0;j<9;j++){
 		int ac[9]={};
 		for(int i=0;i<9;i++){
@@ -263,6 +268,8 @@ int main1(){
 			}
 		}
 	}
+	if(Changed)
+		return Changed;
 	for(int I=0;I<3;I++){
 		for(int J=0;J<3;J++){
 			int ap[9]={};
@@ -289,22 +296,67 @@ int main1(){
 	}
 	return Changed;
 }
+
+int IsSolved(int* pointer){
+	for(int i=0;i<9;i++){
+		for(int j=0;j<9;j++){
+			if(!pointer[i*9+j]){ //a[i][j]
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
 int main(){
 	int flag=1,stepcnt=0;
 	memcpy(b,a,sizeof(int)*81);
 	while(flag){
 		flag=main1();
 		memcpy(a,b,sizeof(int)*81);
-		memset(Stack,0,sizeof(int)*9*9*9);
 		printf("Step%dEnd\n",stepcnt++);
-	}
-	for(int i=0;i<9;i++){
-		for(int j=0;j<9;j++){
-			if(!a[i][j]){
-				printf("NOT Solved.\n");
-				return 1;
+		if(!flag&&!IsSolved(a[0])){
+			printf("---GuessPart:---\n");
+			int GuessFlag=0,GuessCnt=0;
+			memcpy(aBk,a,sizeof(int)*81);
+			memcpy(StackBk,Stack,sizeof(int)*9*9*9);
+			memset(Stack,0,sizeof(int)*9*9*9);
+			for(int i=0;i<9;i++){
+				for(int j=0;j<9;j++){
+					for(int k=0;k<9;k++){
+						if(StackBk[i][j][k]){
+							int SubFlag=1;
+							GuessFlag=0;
+							GuessCnt=0;
+							memcpy(aBk,a,sizeof(int)*81);
+							a[i][j]=StackBk[i][j][k];
+							printf("Guess:(%d,%d)is%d\n",i,j,StackBk[i][j][k]);
+							while(SubFlag){
+								SubFlag=main1();
+								memcpy(a,b,sizeof(int)*81);
+								memset(Stack,0,sizeof(int)*9*9*9);
+								printf("GuessStep%dEnd\n",GuessCnt++);
+							}
+							if(IsSolved(a[0]))
+								GuessFlag=1;
+							if(GuessFlag)
+								break;
+							memcpy(a,aBk,sizeof(int)*81);
+							memcpy(b,aBk,sizeof(int)*81);
+						}
+					}
+					if(GuessFlag)
+						break;
+				}
+				if(GuessFlag)
+					break;
 			}
+			printf("---GuessPartEnd---\n");
 		}
+		memset(Stack,0,sizeof(int)*9*9*9);
+	}
+	if(!IsSolved(a[0])){
+		printf("NOT Solved.\n");
+		return 1;
 	}
 	printf("Solved!\n");
 	return 0;
