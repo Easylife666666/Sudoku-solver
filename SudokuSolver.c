@@ -1,17 +1,17 @@
 #include <stdio.h>
 #include <string.h>
 int a[9][9]={
-{0,0,9,0,0,3,1,5,0},
-{0,5,0,0,0,0,0,3,4},
-{0,1,0,4,0,2,0,0,0},
-{0,0,1,2,0,0,0,0,7},
-{0,0,4,0,1,0,5,0,0},
-{9,0,0,0,0,7,6,0,0},
-{0,0,0,1,0,4,0,8,0},
-{1,8,0,0,0,0,0,6,0},
-{0,4,3,6,0,0,7,0,0}
+{0,0,0,5,0,0,3,0,8},
+{8,0,0,0,0,0,0,6,0},
+{0,0,1,9,0,0,4,5,0},
+{0,2,0,0,1,9,0,0,0},
+{7,0,0,4,0,8,0,0,9},
+{0,0,0,3,5,0,0,2,0},
+{0,9,6,0,0,4,2,0,0},
+{0,4,0,0,0,0,0,0,5},
+{2,0,8,0,0,5,0,0,0}
 },b[9][9],aBk[9][9];
-int Stack[9][9][9]={},StackBk[9][9][9]={};
+int Stack[9][9][9],StackBk[9][9][9];
 
 int Check(int* SubStack,int* rpt,int r){
 	int cnt=0,i;
@@ -42,17 +42,17 @@ void Keep(int* SubStack,int* rpt,int r){
 }
 int exists(int Ii,int Ij,int Ik){
 	int flag=0,i,j;
-	//R
+	/*R*/
 	for(i=0;i<9;i++){
 		if(a[i][Ij]==Ik)
 			flag=1;
 	}
-	//C
+	/*C*/
 	for(j=0;j<9;j++){
 		if(a[Ii][j]==Ik)
 			flag=1;
 	}
-	//S
+	/*S*/
 	for(i=Ii/3*3;i<(Ii/3+1)*3;i++){
 		for(j=Ij/3*3;j<(Ij/3+1)*3;j++){
 			if(a[i][j]==Ik)
@@ -75,7 +75,7 @@ int main1(){
 			if(a[i][j])
 				printf("%11d",a[i][j]);
 			else{
-				char cb[10]={};
+				char cb[10];
 				cb[9]='\0';
 				for(k=1;k<10;k++){
 					if(!exists(i,j,k)){
@@ -113,7 +113,8 @@ int main1(){
 
 	//printf("1:\n");
 	for(i=0;i<9;i++){
-		int ar[9]={};
+		int ar[9];
+		memset(ar,0,sizeof(int)*9);
 		for(j=0;j<9;j++){
 			for(k=0;k<9;k++){
 				if(Stack[i][j][k])
@@ -121,13 +122,14 @@ int main1(){
 			}
 		}
 		for(r=2;r<10;r++){
-			int cnt=0,rpt[10]={};
+			int cnt=0,rpt[10];
+			memset(rpt, 0, sizeof(int)*10);
 			for(k=0;k<9;k++){
 				if(ar[k]==r)
 					rpt[cnt++]=k;
 			}
 			if(cnt==r){
-				//printf("CheckpointR:%d\n",i);
+				/*printf("CheckpointR:%d\n",i);*/
 				int flag=0;
 				for(j=0;j<9;j++){
 					flag=flag||(!(Check(Stack[i][j],rpt,r)));
@@ -140,9 +142,10 @@ int main1(){
 			}
 		}
 	}
-	//printf("2:\n");
+	/*printf("2:\n");*/
 	for(j=0;j<9;j++){
-		int ac[9]={};
+		int ac[9];
+		memset(ac,0,sizeof(int)*9);
 		for(i=0;i<9;i++){
 			for(k=0;k<9;k++){
 				if(Stack[i][j][k])
@@ -150,7 +153,8 @@ int main1(){
 			}
 		}
 		for(r=2;r<10;r++){
-			int cnt=0,rpt[10]={};
+			int cnt=0,rpt[10];
+			memset(rpt, 0, sizeof(int)*10);
 			for(k=0;k<9;k++){
 				if(ac[k]==r)
 					rpt[cnt++]=k;
@@ -172,7 +176,8 @@ int main1(){
 	//printf("3:\n");
 	for(I=0;I<3;I++){
 		for(J=0;J<3;J++){
-			int ap[9]={};
+			int ap[9];
+			memset(ap,0,sizeof(int)*9);
 			for(i=I*3;i<(I+1)*3;i++){
 				for(j=J*3;j<(J+1)*3;j++){
 					for(k=0;k<9;k++){
@@ -182,13 +187,14 @@ int main1(){
 				}
 			}
 			for(r=2;r<10;r++){
-				int cnt=0,rpt[10]={};
+				int cnt=0,rpt[10];
+				memset(rpt, 0, sizeof(int)*10);
 				for(k=0;k<9;k++){
 					if(ap[k]==r)
 						rpt[cnt++]=k;
 				}
 				if(cnt==r){
-					//printf("CheckpointA:%d,%d\n",I,J);
+					/*printf("CheckpointA:%d,%d\n",I,J);*/
 					int flag=0;
 					for(i=I*3;i<(I+1)*3;i++){
 						for(j=J*3;j<(J+1)*3;j++){
@@ -216,7 +222,7 @@ int main1(){
 			if(a[i][j])
 				printf("%11d",a[i][j]);
 			else{
-				char cb[10]={};
+				char cb[10];
 				cb[9]='\0';
 				for(k=0;k<9;k++){
 					if(Stack[i][j][k])
@@ -231,7 +237,8 @@ int main1(){
 	}
 
 	for(i=0;i<9;i++){
-		int ar[9]={};
+		int ar[9];
+		memset(ar,0,sizeof(int)*9);
 		for(j=0;j<9;j++){
 			for(k=0;k<9;k++){
 				if(Stack[i][j][k])
@@ -240,7 +247,7 @@ int main1(){
 		}
 		for(k=0;k<9;k++){
 			if(ar[k]==1){
-				//printf("R%d:%d\n",i,k+1);
+				/*printf("R%d:%d\n",i,k+1);*/
 				for(j=0;j<9;j++){
 					if(Stack[i][j][k])
 						Changed+=fill(i,j,Stack[i][j][k]);
@@ -251,7 +258,8 @@ int main1(){
 	if(Changed)
 		return Changed;
 	for(j=0;j<9;j++){
-		int ac[9]={};
+		int ac[9];
+		memset(ac,0,sizeof(int)*9);
 		for(i=0;i<9;i++){
 			for(k=0;k<9;k++){
 				if(Stack[i][j][k])
@@ -260,7 +268,7 @@ int main1(){
 		}
 		for(k=0;k<9;k++){
 			if(ac[k]==1){
-				//printf("C%d:%d\n",j,k+1);
+				/*printf("C%d:%d\n",j,k+1);*/
 				for(i=0;i<9;i++){
 					if(Stack[i][j][k])
 						Changed+=fill(i,j,Stack[i][j][k]);
@@ -272,7 +280,8 @@ int main1(){
 		return Changed;
 	for(I=0;I<3;I++){
 		for(J=0;J<3;J++){
-			int ap[9]={};
+			int ap[9];
+			memset(ap,0,sizeof(int)*9);
 			for(i=I*3;i<(I+1)*3;i++){
 				for(j=J*3;j<(J+1)*3;j++){
 					for(k=0;k<9;k++){
@@ -283,7 +292,7 @@ int main1(){
 			}
 			for(k=0;k<9;k++){
 				if(ap[k]==1){
-					//printf("%d,%d:%d\n",I,J,k+1);
+					/*printf("%d,%d:%d\n",I,J,k+1);*/
 					for(i=I*3;i<(I+1)*3;i++){
 						for(j=J*3;j<(J+1)*3;j++){
 							if(Stack[i][j][k])
@@ -310,6 +319,7 @@ int IsSolved(int* pointer){
 }
 int main(){
 	int flag=1,stepcnt=0,i,j,k,GuessFlag,GuessCnt;
+	memset(Stack,0,sizeof(int)*9*9*9);
 	memcpy(b,a,sizeof(int)*81);
 	while(flag){
 		flag=main1();
